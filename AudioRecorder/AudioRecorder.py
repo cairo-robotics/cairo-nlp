@@ -3,7 +3,7 @@ import wave
 from array import array
 from datetime import datetime
 import json
-
+import os
 
 '''
 Audio Recorder 
@@ -67,12 +67,21 @@ class AudioRecorder:
                 time_frames = []
         self.batch_save()
 
+    '''
+    Saving the audio files
+    '''
+    def batch_save(self,path=None):
+        path = "Recording/" if path==None else path+"/" #todo error handling for ending with /
+        try:
+            if not os.path.exists(path):
+                os.makedirs(path)
+        except BaseException:
+            print("Could not create a recording folder")
 
-    def batch_save(self):
         #saving the recording as wav
         for key, frame in self.frames.items():
             print("Saving Key : " + str(key) + " Frame length" + str(len(frame)))
-            self.save_file("Recording/recording" + str(key) + ".wav", frame)
+            self.save_file(path+"recording" + str(key) + ".wav", frame)
 
         #saving the timing as json
         for key,frame in self.frames_details.items():
