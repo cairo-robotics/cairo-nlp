@@ -9,7 +9,7 @@ class SpeechRecognizer:
         self.base_path = "Recording" if path==None else path
         self.onlyfiles = [f for f in listdir(self.base_path) if isfile(join(self.base_path, f))]
 
-    def recoginize(self):
+    def recognize(self):
         for file in self.onlyfiles:
             AUDIO_FILE = path.join(str(self.base_path)+"/"+file)
             r = sr.Recognizer()
@@ -18,7 +18,13 @@ class SpeechRecognizer:
             try:
                 #todo : add the text back to json of timings
                 #todo : add credentials for google
-                print("Google: "+r.recognize_google(audio))
+                print("Google: ")
+                text = r.recognize_google(audio,show_all=True)
+                print(text)
+                # for t in text['alternative']:
+                #     print(t['transcript'])
+
+
 
             except sr.UnknownValueError:
                 print("Google Speech Recognition could not understand audio")

@@ -13,7 +13,7 @@ class AudioRecorder:
     def __init__(self,length_threshold=30,isRecord=False):
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
-        self.RATE = 44100
+        self.RATE = 45100
         self.CHUNK = 1024
         self.RECORD_SECONDS = 15
         self.LENGTH_THRESHOLD = length_threshold
@@ -104,12 +104,3 @@ class AudioRecorder:
         self.stream.stop_stream()
         self.stream.close()
         self.audio.terminate()
-
-
-def main():
-    audioRecorder = AudioRecorder()
-    audioRecorder.record()
-
-
-if __name__=="__main__":
-    main()
