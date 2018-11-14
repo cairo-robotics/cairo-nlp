@@ -65,8 +65,8 @@ class AudioRecorder:
     '''
     Saving the audio files
     '''
-    def batch_save(self, path=None):
-        path = "Recording/" if path is None else path+"/"  # todo error handling for ending with /
+    def batch_save(self, path=os.path.dirname(os.path.realpath(__file__)) + '../../../data/'):
+        # todo error handling for ending with /
         try:
             if not os.path.exists(path):
                 os.makedirs(path)
