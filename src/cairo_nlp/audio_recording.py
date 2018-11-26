@@ -2,6 +2,7 @@ import pyaudio
 import wave
 from array import array
 from datetime import datetime
+import datetime
 import json
 import os
 
@@ -29,18 +30,18 @@ class AudioRecorder:
 
         # starting recording
         self.frames = []
-        self.frames_details = dict()
 
         self.BASE_PATH = os.path.dirname(os.path.realpath(__file__))
         self.DATA_PATH = self.BASE_PATH +'/../../data/'
         self.RECORD_FILE = "recording/recording0.wav"
         self.SPLIT_FILE = "split/"
+        self.DETAILS_FILE = "details/"
 
     def get_audio(self, filename=None):
         if filename is None:
             return FileNotFoundError
         else:
-            pyaudio.pla
+            pass
 
     def record(self, seconds=None):
         # todo : Work on keyboard interrupt for audio
@@ -52,17 +53,16 @@ class AudioRecorder:
         record_seconds = self.RECORD_SECONDS if seconds is None else seconds
         new_frames = []
         time_frames = []
-        start_time = datetime.now()
-        print("\n Start time : ",str(start_time))
+        self.start_time = datetime.datetime.now()
+        print("\n Start time : ",str(self.start_time))
         for i in range(0, int(self.RATE / self.CHUNK * record_seconds)):
             data = self.stream.read(self.CHUNK)
             data_chunk = array('h', data)
             new_frames.append(data)
-            time_frames.append(datetime.now())
         if len(new_frames) >= self.LENGTH_THRESHOLD:
             self.frames = new_frames
-        end_time = datetime.now()
-        print("\n End time : ",str(end_time))
+        self.end_time = datetime.datetime.now()
+        print("\n End time : ",str(self.end_time))
         self.save_file(self.frames , self.DATA_PATH + self.RECORD_FILE)
         chunks = self.audio_split()
 
@@ -74,10 +74,19 @@ class AudioRecorder:
         sound = AudioSegment.from_wav(self.DATA_PATH + self.RECORD_FILE)
         chunks = split_on_silence(sound, min_silence_len=500, silence_thresh=-40,keep_silence=500)
         i = 0
+        details = {}
         for chunk in chunks:
             print("Saving split_chunk_"+str(i)+".wav")
-            chunk.export(self.DATA_PATH+self.SPLIT_FILE+"split_chunk_"+str(i)+".wav", format="wav")
+            file_path = self.DATA_PATH+self.SPLIT_FILE+"split_chunk_"+str(i)+".wav"
+            chunk.export(file_path ,format="wav")
+            if i!=0:
+                self.start_time = self.start_time + datetime.timedelta(seconds=(len(chunk)/1000))
+            d = {"start_time":str(self.start_time),"path":file_path}
+            details[i] = d
             i += 1
+        with open(self.DATA_PATH+self.DETAILS_FILE+'details.json', 'w') as outfile:
+            json.dump(details, outfile)
+
         return chunks
 
     def batch_save(self, final_audio_chunk, path=None):
@@ -99,11 +108,6 @@ class AudioRecorder:
             print("Saving Key: " + str(i) + " Frame length: " + str(len(audio)))
             self.save_file(path+"split_recording" + str(i) + ".wav", audio)
             i+=1
-
-        # saving the timing as json
-        for key, frame in self.frames_details.items():
-            with open('Recording/result_'+str(key)+'.json', 'w') as fp:
-                json.dump(frame, fp)
 
     def save_file(self, frames ,filename = None):
         """Saving a particular frames to a file of format .wav
@@ -140,3 +144,6 @@ class AudioRecorder:
                     print("Input Device id ", i, " - ", p.get_device_info_by_host_api_device_index(0, i).get('name'))
                     print("\tChannels:")
                     print(p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels'))
+
+ar = AudioRecorder()
+ar.record(6)
