@@ -1,0 +1,12 @@
+Keep the cup upright,0
+keep the top facing up,0
+Keep the top of the object perpendicular to the floor,0
+hold the object upright,0
+do not drop the ball,0
+put the ball in the cup,1
+drop the object on top of the other object,1
+place the object onto the target,1
+maintain 3 meters of height,2
+don't let the cup get close to the wire,2
+dont let this object get closer than this distance to that object,2
+keep the object at least 6 inches from this other object,2

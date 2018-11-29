@@ -1,2 +1,3 @@
 pyaudio==0.2.11
 pydub==0.23.0
+genism==3.4.0

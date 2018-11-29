@@ -35,7 +35,7 @@ class AudioRecorder:
         self.DATA_PATH = self.BASE_PATH +'/../../data/'
         self.RECORD_FILE = "recording/recording0.wav"
         self.SPLIT_FILE = "split/"
-        self.DETAILS_FILE = "details/"
+        self.DETAILS_FILE = "details/details.json"
 
     def get_audio(self, filename=None):
         if filename is None:
@@ -84,7 +84,7 @@ class AudioRecorder:
             d = {"start_time":str(self.start_time),"path":file_path}
             details[i] = d
             i += 1
-        with open(self.DATA_PATH+self.DETAILS_FILE+'details.json', 'w') as outfile:
+        with open(self.DATA_PATH+self.DETAILS_FILE, 'w') as outfile:
             json.dump(details, outfile)
 
         return chunks
@@ -144,6 +144,3 @@ class AudioRecorder:
                     print("Input Device id ", i, " - ", p.get_device_info_by_host_api_device_index(0, i).get('name'))
                     print("\tChannels:")
                     print(p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels'))
-
-ar = AudioRecorder()
-ar.record(6)

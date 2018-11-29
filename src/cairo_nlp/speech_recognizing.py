@@ -13,14 +13,14 @@ class SpeechRecognizer:
         self.DATA_PATH = self.BASE_PATH + '/../../data/'
         self.RECORD_FILE = "recording/recording0.wav"
         self.SPLIT_FILE = "split/"
-        self.DETAILS_FILE = "details/"
+        self.DETAILS_FILE = "details/details.json"
         self.onlyfiles = [f for f in listdir(self.DATA_PATH+self.SPLIT_FILE) if isfile(join(self.DATA_PATH+self.SPLIT_FILE, f))]
-
 
     def recognize(self):
         d  =dict()
+        print("List of files: ")
         print(self.onlyfiles)
-        file = self.DATA_PATH+self.DETAILS_FILE+"details.json"
+        file = self.DATA_PATH+self.DETAILS_FILE
         with open(file, "r") as read_file:
             d = json.load(read_file)
         i=0
@@ -42,8 +42,5 @@ class SpeechRecognizer:
                 print("Could not request results from Google Speech Recognition service; {0}".format(e))
             i += 1
 
-        with open(self.DATA_PATH+self.DETAILS_FILE+'details.json', 'w') as outfile:
+        with open(self.DATA_PATH+self.DETAILS_FILE, 'w') as outfile:
             json.dump(d, outfile)
-
-_sr = SpeechRecognizer()
-_sr.recognize()
