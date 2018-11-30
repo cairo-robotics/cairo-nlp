@@ -8,3 +8,4 @@
 .idea/workspace.xml
 *.pyc
 /env
+/data/model/word2vec/
