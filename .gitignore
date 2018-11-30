@@ -1,6 +1,7 @@
 */__pycache__
 *.wav
 .DS_Store
+.idea/
 .idea/cairo-nlp.iml
 .idea/misc.xml
 .idea/modules.xml
