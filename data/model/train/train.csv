@@ -2,7 +2,7 @@ Keep the cup upright,0
 keep the top facing up,0
 Keep the top of the object perpendicular to the floor,0
 hold the object upright,0
-do not drop the ball,0
+do not drop the ball,1
 put the ball in the cup,1
 drop the object on top of the other object,1
 place the object onto the target,1
