@@ -10,8 +10,8 @@ import random
 
 # from sklearn.feature_extraction.text import TfidfVectorizer
 
-from src.cairo_nlp.audio_recording import AudioRecorder
-from src.cairo_nlp.speech_recognizing import SpeechRecognizer
+# from src.cairo_nlp.audio_recording import AudioRecorder
+# from src.cairo_nlp.speech_recognizing import SpeechRecognizer
 
 
 class SentenceClassifier:
@@ -57,7 +57,7 @@ class SentenceClassifier:
 
     def sent_vectorizer(self, tokens):
         numw = 0
-        sent_vec = np.zeros([1,300])
+        sent_vec = np.zeros([300,])
         for w in tokens:
             try:
                 sent_vec = np.add(sent_vec, self.word2Vec_model[w])
@@ -67,7 +67,7 @@ class SentenceClassifier:
                 sent_vec = np.add(sent_vec, self.word2Vec_model.wv[random.choice(self.word2Vec_model.wv.index2entity)])
         if numw == 0:
             numw += 1
-        return np.asarray(sent_vec) / numw
+        return sent_vec / numw
 
     def process_sentences(self, sentences):
         processed_vectors = []
@@ -104,14 +104,14 @@ class SentenceClassifier:
         val = self.clf.predict(vector)
         return val
 
-
-
 sc = SentenceClassifier()
-sc.sentences,sc.labels = sc.read_data()
+sc.sentences, sc.labels = sc.read_data()
+print(sc.sentences)
+print(sc.labels)
 sc.train_SVC()
 # ar = AudioRecorder()
 # ar.record(15)
 # _sr = SpeechRecognizer()
 # _sr.recognize()
-print(sc.predict(["keep the cup upright","place the ball in the cup","place the ball in the cup"]))
+print(sc.predict(["keep the cup upright", "place the ball in the cup", "maintain a height of 5 meters"]))
 # # sc.read_from_file_and_predict()
