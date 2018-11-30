@@ -10,8 +10,8 @@ import random
 
 # from sklearn.feature_extraction.text import TfidfVectorizer
 
-# from src.cairo_nlp.audio_recording import AudioRecorder
-# from src.cairo_nlp.speech_recognizing import SpeechRecognizer
+from src.cairo_nlp.audio_recording import AudioRecorder
+from src.cairo_nlp.speech_recognizing import SpeechRecognizer
 
 
 class SentenceClassifier:
@@ -94,8 +94,9 @@ class SentenceClassifier:
         for key,values in d.items():
             if 'text' in values:
                 print(values['text'])
-                print(self.predict(values['text']))
-                d[key]['prediction'] = str(self.predict(values['text']))
+                prediction = self.predict([values['text']])
+                print(prediction)
+                d[key]['prediction'] = str(prediction[0])
         with open(self.DATA_PATH+self.DETAILS_FILE, 'w') as outfile:
             json.dump(d, outfile)
 
@@ -109,9 +110,9 @@ sc.sentences, sc.labels = sc.read_data()
 print(sc.sentences)
 print(sc.labels)
 sc.train_SVC()
-# ar = AudioRecorder()
-# ar.record(15)
-# _sr = SpeechRecognizer()
-# _sr.recognize()
-print(sc.predict(["keep the cup upright", "place the ball in the cup", "maintain a height of 5 meters"]))
-# # sc.read_from_file_and_predict()
+ar = AudioRecorder()
+ar.record(15)
+_sr = SpeechRecognizer()
+_sr.recognize()
+# print(sc.predict(["keep the cup upright", "place the ball in the cup", "maintain a height of 5 meters"]))
+sc.read_from_file_and_predict()
