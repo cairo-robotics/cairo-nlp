@@ -5,6 +5,7 @@ from datetime import datetime
 import datetime
 import json
 import os
+import time
 
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
@@ -36,6 +37,10 @@ class AudioRecorder:
         self.RECORD_FILE = "recording/recording0.wav"
         self.SPLIT_FILE = "split/"
         self.DETAILS_FILE = "details/details.json"
+        self.stop_recording = False
+
+    def stop_recording(self):
+        self.stop_recording = True
 
     def get_audio(self, filename=None):
         if filename is None:
@@ -43,7 +48,7 @@ class AudioRecorder:
         else:
             pass
 
-    def record(self, seconds=None):
+    def record(self, timed=True, seconds=None):
         # todo : Work on keyboard interrupt for audio
         """
         Records until the given time.
@@ -52,21 +57,23 @@ class AudioRecorder:
         """
         record_seconds = self.RECORD_SECONDS if seconds is None else seconds
         new_frames = []
-        time_frames = []
         self.start_time = datetime.datetime.now()
         print("\n Start time : ",str(self.start_time))
-        for i in range(0, int(self.RATE / self.CHUNK * record_seconds)):
-            data = self.stream.read(self.CHUNK)
-            data_chunk = array('h', data)
-            new_frames.append(data)
+        if timed is True:
+            for i in range(0, int(self.RATE / self.CHUNK * record_seconds)):
+                new_frames.append(self.stream.read(self.CHUNK))
+        else:
+            while not self.stop_recording:
+                new_frames.append(self.stream.read(self.CHUNK))
+                time.sleep(self.RATE / self.CHUNK)
         if len(new_frames) >= self.LENGTH_THRESHOLD:
             self.frames = new_frames
         self.end_time = datetime.datetime.now()
         print("\n End time : ",str(self.end_time))
         self.save_file(self.frames , self.DATA_PATH + self.RECORD_FILE)
-        chunks = self.audio_split()
+        self.save_audio_splits()
 
-    def audio_split(self):
+    def save_audio_splits(self):
         """ Spliting on silence and saving to base directory
 
         :return: split chunks

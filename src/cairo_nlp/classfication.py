@@ -10,8 +10,8 @@ import random
 
 # from sklearn.feature_extraction.text import TfidfVectorizer
 
-from src.cairo_nlp.audio_recording import AudioRecorder
-from src.cairo_nlp.speech_recognizing import SpeechRecognizer
+from cairo_nlp.audio_recording import AudioRecorder
+from cairo_nlp.speech_recognizing import SpeechRecognizer
 
 
 class SentenceClassifier:
@@ -98,7 +98,7 @@ class SentenceClassifier:
                 print(prediction)
                 d[key]['prediction'] = str(prediction[0])
         with open(self.DATA_PATH+self.DETAILS_FILE, 'w') as outfile:
-            json.dump(d, outfile)
+            json.dump(d, outfile, indent=4, sort_keys=True)
 
     def predict(self,sentences):
         vector = self.process_sentences(sentences)
