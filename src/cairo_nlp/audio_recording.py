@@ -1,10 +1,11 @@
 import pyaudio
 import wave
-from array import array
 from datetime import datetime
 import datetime
 import json
 import os
+
+import time
 
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
@@ -43,28 +44,53 @@ class AudioRecorder:
         else:
             pass
 
-    def record(self, seconds=None):
-        # todo : Work on keyboard interrupt for audio
+
+    def _record_realtime(self):
         """
-        Records until the given time.
+        Recording until keyboard interrupt
+        :return:
+        """
+        new_frames = []
+        while True and len(new_frames)<100000:
+            try:
+                data = self.stream.read(self.CHUNK)
+                new_frames.append(data)
+            except KeyboardInterrupt:
+                print("Ending stream")
+                break
+        return new_frames
+
+    def _record_for_seconds(self,seconds):
+        """
+        Record for n seconds
         :param seconds:
         :return:
         """
-        record_seconds = self.RECORD_SECONDS if seconds is None else seconds
         new_frames = []
-        time_frames = []
+        for i in range(0, int(self.RATE / self.CHUNK * seconds)):
+            data = self.stream.read(self.CHUNK)
+            new_frames.append(data)
+        return new_frames
+
+    def record(self, seconds=None):
+        # todo : Work on keyboard interrupt for audio
+        """
+        Records until the given time or record indefinitely.
+        :param seconds:
+        :return:
+        """
+
+        unlimited_record = True if seconds is None else False
         self.start_time = datetime.datetime.now()
         print("\n Start time : ",str(self.start_time))
-        for i in range(0, int(self.RATE / self.CHUNK * record_seconds)):
-            data = self.stream.read(self.CHUNK)
-            data_chunk = array('h', data)
-            new_frames.append(data)
-        if len(new_frames) >= self.LENGTH_THRESHOLD:
-            self.frames = new_frames
+        if unlimited_record:
+            self.frames = self._record_realtime()
+        else:
+            self.frames = self._record_for_seconds(seconds)
         self.end_time = datetime.datetime.now()
         print("\n End time : ",str(self.end_time))
         self.save_file(self.frames , self.DATA_PATH + self.RECORD_FILE)
-        chunks = self.audio_split()
+        self.audio_split()
 
     def audio_split(self):
         """ Spliting on silence and saving to base directory
@@ -86,8 +112,6 @@ class AudioRecorder:
             i += 1
         with open(self.DATA_PATH+self.DETAILS_FILE, 'w') as outfile:
             json.dump(details, outfile)
-
-        return chunks
 
     def batch_save(self, final_audio_chunk, path=None):
 
