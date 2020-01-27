@@ -1,12 +1,16 @@
+# pycache
 */__pycache__
-*.wav
-.DS_Store
-.idea/
-.idea/cairo-nlp.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/workspace.xml
 *.pyc
+
+# audio files 
+*.wav
+
+# Mac OS
+.DS_Store
+
+# IDEs
+.idea
+
+# Data and environment
 /env
 /data/model/word2vec/
