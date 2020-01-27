@@ -14,12 +14,10 @@ if __name__ == "__main__":
     recorder = AudioRecorder()
     speech_recognizer = SpeechRecognizer()
 
-    # If we input a record command do the following: 
+    # If we input a record command do the following:
     # Thread one, start the record function of the recorder
 
     # Thread 2, listen for the keyboard command to stop recording
-
-
 
     recorder.record(15)
     speech_recognizer.recognize()
