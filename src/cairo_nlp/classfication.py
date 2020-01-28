@@ -1,14 +1,13 @@
 import os
-
 import json
-import numpy as np
-from nltk.corpus import stopwords
 import gensim
-import pandas as pd
-from sklearn.svm import SVC
 import random
+import numpy as np
+import pandas as pd
 
 
+from sklearn.svm import SVC
+from nltk.corpus import stopwords
 from cairo_nlp.audio_recording import AudioRecorder
 from cairo_nlp.speech_recognizing import SpeechRecognizer
 
