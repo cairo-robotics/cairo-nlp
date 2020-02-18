@@ -14,8 +14,7 @@ RUN apt -y update && apt -y install \
 RUN mkdir -p ~/catkin_ws/src
 RUN /bin/bash -c '. /opt/ros/kinetic/setup.bash; cd ~/catkin_ws/; catkin build'
 
-
-# Clone CAIRO NLP
+# Copy over source files
 COPY . /root/catkin_ws/src/cairo-nlp
 
 # Install Python requirements
@@ -36,6 +35,7 @@ RUN echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
 # Clean up apt
 RUN rm -rf /var/lib/apt/lists/*
+
 
 ### NVIDIA STAGE ###
 
